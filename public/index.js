@@ -7,36 +7,35 @@ function onload(err, doc) {
     throw err
   }
 
-  var header = doc.indexOf("Onderwerpen_1")
-  var end = doc.indexOf('\n', header)
-  doc = doc.slice(end).trim()
-  doc = doc.replace(/ +/g, ',')
-  var data = d3.csvParseRows(doc, map)
+  console.log(doc)
+
+  // clean data
+  var header = doc.indexOf("Onderwerpen_1");
+  var end = doc.indexOf('\n', header);
+  doc = doc.slice(end).trim();
+  doc = doc.replace(/  +/g, '');
+  // doc = doc.replace(/ +/g, ',');
+  var data = d3.csvParseRows(doc, map);
+
+  console.log(data)
 
   // remove comma from nationaliteit value
   data.forEach(function(d) {
     d.nationaliteit = d.nationaliteit.replace(/,/g, '');
   });
+    // console.log(data.Perioden)
+    // console.log(Object.values(data.Perioden))
 
-  console.log(data);
 
   function map(d) {
+    // var months = [];
+
     return {
+      geslacht: d[0],
+      leeftijd: d[1],
       nationaliteit: d[2],
-      geslacht: d[3],
-      januari2014: d[5],
-      februari2014: d[6],
-      maart2014: d[7],
-      april2014: d[8],
-      mei2014: d[9],
-      juni2014: d[10],
-      juli2014: d[11],
-      augustus2014: d[12],
-      september2014: d[13],
-      oktober2014: d[14],
-      november2014: d[15],
-      december2014: d[16],
-      januari2015: d[17],
+      jaar: d[4],
+      waarde: d[6],
     }
   }
 }

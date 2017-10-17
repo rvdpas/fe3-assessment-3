@@ -1,19 +1,7 @@
-# ![Assessment 3][banner]
+# Assessment 3
 
-This repository can be forked for [**assessment 3**][a2] of [frontend 3][fe3]
-at [**@CMDA**][cmda].
-
-## TODO
-
-*   [ ] [GitHub Pages](#github-pages)
-*   [ ] [Metadata](#metadata)
-*   [ ] [Issues](#issues)
-*   [ ] Replace this document in your fork with your own readme!
 
 ## GitHub Pages
-
-Set up [GitHub Pages][pages] for this fork through the **Settings** pane.  Use
-the **Master branch** as its source.  Do not choose a Jekyll template.
 
 ## Metadata
 
@@ -26,12 +14,6 @@ the green Clone or download button and fill in a correct description and use the
 Enable issues so we can give feedback by going to the settings tab of your fork
 and checking the box next to `issues`.
 
-[banner]: https://cdn.rawgit.com/cmda-fe3/logo/a4b0614/banner-assessment-3.svg
+## TODO
 
-[a2]: https://github.com/cmda-fe3/course-17-18/tree/master/assessment-3#description
-
-[fe3]: https://github.com/cmda-fe3
-
-[cmda]: https://github.com/cmda
-
-[pages]: https://pages.github.com
+*   [ ] [GitHub Pages](#github-pages)
