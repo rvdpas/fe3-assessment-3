@@ -30,6 +30,11 @@ function onload(err, doc) {
       juni2014: d[10],
       juli2014: d[11],
       augustus2014: d[12],
+      september2014: d[13],
+      oktober2014: d[14],
+      november2014: d[15],
+      december2014: d[16],
+      januari2015: d[17],
       // aantal: total.push(d[5,6,7,8,9,10,11])
 
     }
