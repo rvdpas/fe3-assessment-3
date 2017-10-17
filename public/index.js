@@ -13,12 +13,14 @@ function onload(err, doc) {
   doc = doc.replace(/ +/g, ',')
   var data = d3.csvParseRows(doc, map)
 
-  console.log(data)
+  // remove comma from nationaliteit value
+  data.forEach(function(d) {
+    d.nationaliteit = d.nationaliteit.replace(/,/g, '');
+  });
 
+  console.log(data);
 
   function map(d) {
-    console.log(d)
-  // var total = [];
     return {
       nationaliteit: d[2],
       geslacht: d[3],
@@ -35,8 +37,6 @@ function onload(err, doc) {
       november2014: d[15],
       december2014: d[16],
       januari2015: d[17],
-      // aantal: total.push(d[5,6,7,8,9,10,11])
-
     }
   }
 }
