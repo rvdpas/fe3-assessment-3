@@ -103,6 +103,7 @@ function onload(err, doc) {
     return [a, year[a]];
   });
 
+// Bekijk voor elk de waarde van de array en push ze naar een aparte array om de y Max uit te rekenenn
   var valueList = []
   yearData.forEach(function (values) {
     valueList.push(values[1]);
