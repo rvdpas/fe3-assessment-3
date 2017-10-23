@@ -27,6 +27,8 @@ function onload(err, doc) {
     return row.maand != 0;
   });
 
+  console.log(data)
+
   // create variables
   var ages = {};
   var men = 0;
@@ -36,6 +38,33 @@ function onload(err, doc) {
   var years = {};
   var year = {};
   var month = {};
+  var totalPersonsAYear = {};
+  var countries = {}
+  var afghaans = {
+    men: 0,
+    women: 0
+  };
+  var eritrees = {
+    men: 0,
+    women: 0
+  };
+  var iraaks = {
+    men: 0,
+    women: 0
+  };
+  var iraans = {
+    men: 0,
+    women: 0
+  };
+  var somalisch = {
+    men: 0,
+    women: 0
+  };
+  var syrisch = {
+    men: 0,
+    women: 0
+  };
+
 
   // nog een nieuwe naam voor de functie verzinnen
   function map(d) {
@@ -65,14 +94,21 @@ function onload(err, doc) {
   // Determine de gender and add the correct values to the variables
   data.forEach(function(d) {
     var gender = d.geslacht;
+    var nationality = d.nationaliteit;
     // voeg de data van leeftijd toe aan het object ages. De eerste keer is de key nog undefined dus kennen we 0 toe, daarna voegen we de waarde toe aan de key.
     ages[d.leeftijd] = (ages[d.leeftijd] || 0) + d.waarde;
+
+    if (! countries[nationality]) {
+      countries[nationality] = { Mannen: 0, Vrouwen: 0 };
+    } else {
+      countries[nationality][gender] += d.waarde;
+    }
 
     // Sla de vergelijking op in de variabele
     var splitGender = agesGenders[d.leeftijd] || { "men": 0, "women": 0};
 
     // Check if the data belongs to men or women and add one if true
-    if (gender.includes("Mannen"))  {
+    if (gender.includes("Mannen")) {
       men += d.waarde;
       splitGender.men += d.waarde;
     } else {
@@ -86,6 +122,8 @@ function onload(err, doc) {
 
     agesGenders[d.leeftijd] = splitGender;
   });
+
+console.log(countries.Afghaans)
 
   var svg = d3.select(".Year");
   var margin = {top: 20, right: 20, bottom: 30, left: 40};
