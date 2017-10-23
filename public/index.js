@@ -31,7 +31,7 @@ function onload(err, doc) {
   var ages = {};
   var men = 0;
   var women = 0;
-  // Hoeveeelheid mannen en vrouwen per leeftijdscategorie
+  // Hoeveelheid mannen en vrouwen per leeftijdscategorie
   var agesGenders = {};
   var years = {};
   var year = {};
@@ -108,7 +108,7 @@ function onload(err, doc) {
     valueList.push(values[1]);
   });
 
-  x.domain(Object.keys(year));
+  x.domain(Object.keys(year))
   y.domain([0, d3.max(valueList)])
 
   g.append("g")
@@ -121,14 +121,18 @@ function onload(err, doc) {
     .call(d3.axisLeft(y).ticks(10))
   .append("text")
     .attr("transform", "rotate(-90)")
-    .attr("y", 6)
-    .attr("dy", "0.71em")
-    .attr("text-anchor", "end")
+    .attr("y", 0 - margin.left)
+    .attr("x", 0 - (height / 2))
+    .attr("dy", "1em")
+    .attr("text-anchor", "middle")
     .text("Frequency");
 
   g.selectAll(".bar")
     .data(yearData)
     .enter().append("rect")
+    .transition()
+      .duration(300)
+      .ease(d3.easeLinear)
       .attr("class", "bar")
       .attr("x", function(d) {
         return x(d[0]);
@@ -139,41 +143,42 @@ function onload(err, doc) {
       .attr("width", x.bandwidth())
       .attr("height", function(d) {
         return height - y(d[1]);
-      });
+      })
 
 
-// pie
-  var pieSvg = d3.select(".Gender");
-  var width = +pieSvg.attr("width");
-  var height = +pieSvg.attr("height");
-  var radius = Math.min(width, height) / 2;
-  var g = pieSvg.append("g").attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
-  var color = d3.scaleOrdinal(["#98abc5", "#8a89a6"]);
+// // pie
+//   var pieSvg = d3.select(".Gender");
+//   var width = +pieSvg.attr("width");
+//   var height = +pieSvg.attr("height");
+//   var radius = Math.min(width, height) / 2;
+//   var g = pieSvg.append("g").attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
-  var pie = d3.pie()
-      .sort(null)
-      .value(function(d) { return d.gender; });
+//   var color = d3.scaleOrdinal(["#98abc5", "#8a89a6"]);
 
-  var path = d3.arc()
-      .outerRadius(radius - 10)
-      .innerRadius(0);
+//   var pie = d3.pie()
+//     .sort(null)
+//     .value(function(d) { return d.gender; });
 
-  var label = d3.arc()
-      .outerRadius(radius - 40)
-      .innerRadius(radius - 40);
+//   var path = d3.arc()
+//     .outerRadius(radius - 10)
+//     .innerRadius(0);
 
-  var arc = g.selectAll(".arc")
-    .data(pie([men, women]))
-    .enter().append("g")
-      .attr("class", "arc");
+//   var label = d3.arc()
+//     .outerRadius(radius - 40)
+//     .innerRadius(radius - 40);
 
-  arc.append("path")
-      .attr("d", path)
-      .attr("fill", function(d) { return color(d.index); });
+//   var arc = g.selectAll(".arc")
+//     .data(pie([men, women]))
+//     .enter().append("g")
+//       .attr("class", "arc");
 
-  arc.append("text")
-      // .attr("transform", function(d) { return "translate(" + label.centroid(d.index) + ")"; })
-      .attr("dy", "0.35em")
-      .text(function(d) { return d.data; });
+//   arc.append("path")
+//     .attr("d", path)
+//     .attr("fill", function(d) { return color(d.index); });
+
+//   arc.append("text")
+//     // .attr("transform", function(d) { return "translate(" + label.centroid(d.index) + ")"; })
+//     .attr("dy", "0.35em")
+//     .text(function(d) { return d.data; });
 }
