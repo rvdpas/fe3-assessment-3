@@ -9,8 +9,6 @@
   var g = svg.append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-
-
 // Load csv file as a normal text file so we can clean it
 d3.text("data.csv")
 .mimeType('text/plain;charset=iso88591')
@@ -48,7 +46,6 @@ function onload(err, doc) {
   var agesGenders = {};
   var years = {};
   var year = {};
-  console.log(year)
   var month = {};
   var totalPersonsAYear = {};
   var countries = {}
@@ -112,8 +109,6 @@ function onload(err, doc) {
     return [a, year[a]];
   });
 
-  console.log(yearData)
-
 // Bekijk voor elk de waarde van de array en push ze naar een aparte array om de y Max uit te rekenenn
   var valueList = []
   yearData.forEach(function (values) {
@@ -157,14 +152,9 @@ function onload(err, doc) {
         return height - y(d[1]);
       })
 
-      console.log(yearData)
-      console.log(countries)
-
       var country = Object.keys(countries).map(function (a) {
         return [a, countries[a].Mannen, countries[a].Vrouwen];
       });
-      console.log(country)
-
 
       var countryMen = [];
       country.forEach(function(name) {
@@ -176,35 +166,37 @@ function onload(err, doc) {
         countryNames.push(name[0]);
       });
 
-
       function updateData() {
-
-        svg.call(x).selectAll("text").remove();
-        svg.call(x).selectAll("g.tick").remove();
         x = d3.scaleBand().range([0, width]).padding(0.1);
         y = d3.scaleLinear().rangeRound([height, 0]);
 
         x.domain(countryNames)
         y.domain([0, d3.max(countryMen)])
 
-        console.log(countryMen)
-
+        console.log(country)
+        svg.selectAll(".bar").remove()
 
         g.selectAll(".bar")
           .data(country)
+          .enter().append("rect")
             .transition()
               .duration(300)
               .ease(d3.easeLinear)
+            .attr("class", "bar new")
             .attr("x", function(d) {
               return x(d[0]);
             })
             .attr("y", function(d) {
               return y(d[1]);
+
             })
             .attr("width", x.bandwidth())
             .attr("height", function(d) {
+              console.log(d)
               return height - y(d[1]);
             })
+            svg.call(x).selectAll("text").remove();
+            svg.call(x).selectAll("g.tick").remove();
 
             g.append("g")
               .attr("class", "axis axis--x")
@@ -214,12 +206,15 @@ function onload(err, doc) {
           g.append("g")
             .attr("class", "axis axis--y")
             .call(d3.axisLeft(y).ticks(10))
-          .append("text")
-            .attr("transform", "rotate(-90)")
-            .attr("y", 0 - margin.left)
-            .attr("x", 0 - (height / 2))
-            .attr("dy", "1em")
-            .attr("text-anchor", "middle")
-            .text("Frequency");
+              .append("text")
+              .transition()
+                .duration(300)
+                .ease(d3.easeLinear)
+              .attr("transform", "rotate(-90)")
+              .attr("y", 0 - margin.left)
+              .attr("x", 0 - (height / 2))
+              .attr("dy", "1em")
+              .attr("text-anchor", "middle")
+              .text("Frequency");
       }
 }
