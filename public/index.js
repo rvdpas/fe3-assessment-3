@@ -1,3 +1,16 @@
+  var svg = d3.select(".Year");
+  var margin = {top: 20, right: 20, bottom: 30, left: 40};
+  var width = +svg.attr("width") - margin.left - margin.right;
+  var height = +svg.attr("height") - margin.top - margin.bottom;
+
+  var x = d3.scaleBand().rangeRound([0, width]).padding(0.1);
+  var y = d3.scaleLinear().rangeRound([height, 0]);
+
+  var g = svg.append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+
+
 // Load csv file as a normal text file so we can clean it
 d3.text("data.csv")
 .mimeType('text/plain;charset=iso88591')
@@ -8,13 +21,13 @@ function onload(err, doc) {
     throw err
   }
 
+  document.getElementById("btn").addEventListener("click", updateData);
+
   // set header of the file (this is text about the data, not the data itself)
   var header = doc.indexOf("Onderwerpen_1");
   var end = doc.indexOf('\n', header);
   doc = doc.slice(end).trim();
-  // replace double spaces with a single one
   doc = doc.replace(/  +/g, ' ');
-  // parse clean data and save it in data variable
   var data = d3.csvParseRows(doc, map);
 
   // remove space from nationaliteit value
@@ -27,8 +40,6 @@ function onload(err, doc) {
     return row.maand != 0;
   });
 
-  console.log(data)
-
   // create variables
   var ages = {};
   var men = 0;
@@ -37,36 +48,11 @@ function onload(err, doc) {
   var agesGenders = {};
   var years = {};
   var year = {};
+  console.log(year)
   var month = {};
   var totalPersonsAYear = {};
   var countries = {}
-  var afghaans = {
-    men: 0,
-    women: 0
-  };
-  var eritrees = {
-    men: 0,
-    women: 0
-  };
-  var iraaks = {
-    men: 0,
-    women: 0
-  };
-  var iraans = {
-    men: 0,
-    women: 0
-  };
-  var somalisch = {
-    men: 0,
-    women: 0
-  };
-  var syrisch = {
-    men: 0,
-    women: 0
-  };
 
-
-  // nog een nieuwe naam voor de functie verzinnen
   function map(d) {
     // create an array to save all the months
     var months = ['januari', 'februari', 'maart', 'april', 'mei', 'juni', 'juli', 'augustus', 'september', 'oktober', 'november', 'december'];
@@ -122,23 +108,11 @@ function onload(err, doc) {
 
     agesGenders[d.leeftijd] = splitGender;
   });
-
-console.log(countries.Afghaans)
-
-  var svg = d3.select(".Year");
-  var margin = {top: 20, right: 20, bottom: 30, left: 40};
-  var width = +svg.attr("width") - margin.left - margin.right;
-  var height = +svg.attr("height") - margin.top - margin.bottom;
-
-  var x = d3.scaleBand().rangeRound([0, width]).padding(0.1);
-  var y = d3.scaleLinear().rangeRound([height, 0]);
-
-  var g = svg.append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
   var yearData = Object.keys(year).map(function (a) {
     return [a, year[a]];
   });
+
+  console.log(yearData)
 
 // Bekijk voor elk de waarde van de array en push ze naar een aparte array om de y Max uit te rekenenn
   var valueList = []
@@ -183,40 +157,69 @@ console.log(countries.Afghaans)
         return height - y(d[1]);
       })
 
+      console.log(yearData)
+      console.log(countries)
+
+      var country = Object.keys(countries).map(function (a) {
+        return [a, countries[a].Mannen, countries[a].Vrouwen];
+      });
+      console.log(country)
 
 
-// // pie
-//   var pieSvg = d3.select(".Gender");
-//   var width = +pieSvg.attr("width");
-//   var height = +pieSvg.attr("height");
-//   var radius = Math.min(width, height) / 2;
-//   var g = pieSvg.append("g").attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+      var countryMen = [];
+      country.forEach(function(name) {
+        countryMen.push(name[1]);
+      });
 
-//   var color = d3.scaleOrdinal(["#98abc5", "#8a89a6"]);
+      var countryNames = [];
+      country.forEach(function(name) {
+        countryNames.push(name[0]);
+      });
 
-//   var pie = d3.pie()
-//     .sort(null)
-//     .value(function(d) { return d.gender; });
 
-//   var path = d3.arc()
-//     .outerRadius(radius - 10)
-//     .innerRadius(0);
+      function updateData() {
 
-//   var label = d3.arc()
-//     .outerRadius(radius - 40)
-//     .innerRadius(radius - 40);
+        svg.call(x).selectAll("text").remove();
+        svg.call(x).selectAll("g.tick").remove();
+        x = d3.scaleBand().range([0, width]).padding(0.1);
+        y = d3.scaleLinear().rangeRound([height, 0]);
 
-//   var arc = g.selectAll(".arc")
-//     .data(pie([men, women]))
-//     .enter().append("g")
-//       .attr("class", "arc");
+        x.domain(countryNames)
+        y.domain([0, d3.max(countryMen)])
 
-//   arc.append("path")
-//     .attr("d", path)
-//     .attr("fill", function(d) { return color(d.index); });
+        console.log(countryMen)
 
-//   arc.append("text")
-//     // .attr("transform", function(d) { return "translate(" + label.centroid(d.index) + ")"; })
-//     .attr("dy", "0.35em")
-//     .text(function(d) { return d.data; });
+
+        g.selectAll(".bar")
+          .data(country)
+            .transition()
+              .duration(300)
+              .ease(d3.easeLinear)
+            .attr("x", function(d) {
+              return x(d[0]);
+            })
+            .attr("y", function(d) {
+              return y(d[1]);
+            })
+            .attr("width", x.bandwidth())
+            .attr("height", function(d) {
+              return height - y(d[1]);
+            })
+
+            g.append("g")
+              .attr("class", "axis axis--x")
+              .attr("transform", "translate(0," + height + ")")
+              .call(d3.axisBottom(x));
+
+          g.append("g")
+            .attr("class", "axis axis--y")
+            .call(d3.axisLeft(y).ticks(10))
+          .append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 0 - margin.left)
+            .attr("x", 0 - (height / 2))
+            .attr("dy", "1em")
+            .attr("text-anchor", "middle")
+            .text("Frequency");
+      }
 }
