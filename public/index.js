@@ -1,3 +1,11 @@
+  /* Ideeeën
+  - Laad het hele data bestand in en filter dan per filter zodat hij de data al kent.
+  - welke opties komen er in de select lijst?
+  - Moet je alle grafieken kunnen filteren?
+  - Pie koppelen aan bar chart
+  - labels bij de assen
+  */
+
   var svg = d3.select(".Year");
   var margin = {top: 20, right: 20, bottom: 30, left: 40};
   var width = +svg.attr("width") - margin.left - margin.right;
@@ -21,6 +29,20 @@ function onload(err, doc) {
 
   document.getElementById("btn").addEventListener("click", updateData);
 
+
+// working on select filter
+  var elem = document.getElementById('select');
+  elem.addEventListener("change", onSelectChange);
+
+  function onSelectChange(){
+    var value = this.value;
+
+    console.log(value)
+    // var fdata = filteredData(value);
+    // d3.select('#Network_graph').selectAll("*").remove();
+    // makeGraph("#Network_graph", fdata);
+  }
+
   // set header of the file (this is text about the data, not the data itself)
   var header = doc.indexOf("Onderwerpen_1");
   var end = doc.indexOf('\n', header);
@@ -37,6 +59,8 @@ function onload(err, doc) {
   data = data.filter(function (row) {
     return row.maand != 0;
   });
+
+  console.log(data)
 
   // create variables
   var ages = {};
@@ -180,7 +204,7 @@ function onload(err, doc) {
           .data(country)
           .enter().append("rect")
             .transition()
-              .duration(300)
+              .duration(750)
               .ease(d3.easeLinear)
             .attr("class", "bar new")
             .attr("x", function(d) {
@@ -188,7 +212,6 @@ function onload(err, doc) {
             })
             .attr("y", function(d) {
               return y(d[1]);
-
             })
             .attr("width", x.bandwidth())
             .attr("height", function(d) {
@@ -200,21 +223,81 @@ function onload(err, doc) {
 
             g.append("g")
               .attr("class", "axis axis--x")
+              .transition()
+                .duration(0)
+                .ease(d3.easeLinear)
               .attr("transform", "translate(0," + height + ")")
               .call(d3.axisBottom(x));
 
           g.append("g")
             .attr("class", "axis axis--y")
+            .transition().duration(750)
             .call(d3.axisLeft(y).ticks(10))
               .append("text")
-              .transition()
-                .duration(300)
-                .ease(d3.easeLinear)
               .attr("transform", "rotate(-90)")
               .attr("y", 0 - margin.left)
               .attr("x", 0 - (height / 2))
               .attr("dy", "1em")
               .attr("text-anchor", "middle")
               .text("Frequency");
+
+        function change() {
+          clearTimeout(sortTimeout);
+
+          // Copy-on-write since tweens are evaluated after a delay.
+           x = x.domain(country.sort(this.checked ? function(a, b) { return b[1] - a[1]; } : function(a, b) { return d3.ascending(a[0], b[0]); })
+            .map(function(d) { return d[0]; }))
+            .copy();
+
+          svg.selectAll(".bar").sort(function(a, b) {
+            return x(a[1]) - x(b[0]);
+          });
+
+          var transition = svg.transition().duration(750),
+            delay = function(d, i) {
+              return i * 50;
+            };
+
+          transition.selectAll(".bar")
+              .delay(delay)
+              .attr("x", function(d) {
+                return x(d[0]);
+              });
+
+          transition.select("axis axis--x")
+            .call(x)
+          .selectAll("g")
+            .delay(delay);
+        }
       }
+
+  d3.select("input").on("change", change);
+
+  function change() {
+
+    // Copy-on-write since tweens are evaluated after a delay.
+     x = x.domain(yearData.sort(this.checked ? function(a, b) { return b[1] - a[1]; } : function(a, b) { return d3.ascending(a[0], b[0]); })
+      .map(function(d) { return d[0]; }))
+      .copy();
+
+    svg.selectAll(".bar").sort(function(a, b) {
+      return x(a[1]) - x(b[0]);
+    });
+
+    var transition = svg.transition().duration(750),
+      delay = function(d, i) {
+        return i * 50;
+      };
+
+    transition.selectAll(".bar")
+        .delay(delay)
+        .attr("x", function(d) {
+          return x(d[0]);
+        });
+
+    transition.select("axis axis--x")
+      .call(x)
+    .selectAll("g")
+      .delay(delay);
+  }
 }
