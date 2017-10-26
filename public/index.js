@@ -60,8 +60,6 @@ function onload(err, doc) {
     return row.maand != 0;
   });
 
-  console.log(data)
-
   // create variables
   var ages = {};
   var men = 0;
@@ -72,7 +70,7 @@ function onload(err, doc) {
   var year = {};
   var month = {};
   var totalPersonsAYear = {};
-  var countries = {}
+  var countries = {};
 
   function map(d) {
     // create an array to save all the months
@@ -129,6 +127,8 @@ function onload(err, doc) {
 
     agesGenders[d.leeftijd] = splitGender;
   });
+    console.log(year)
+    console.log(years)
   var yearData = Object.keys(year).map(function (a) {
     return [a, year[a]];
   });
@@ -138,6 +138,8 @@ function onload(err, doc) {
   yearData.forEach(function (values) {
     valueList.push(values[1]);
   });
+
+  console.log(valueList)
 
   x.domain(Object.keys(year))
   y.domain([0, d3.max(valueList)])
@@ -176,9 +178,17 @@ function onload(err, doc) {
         return height - y(d[1]);
       })
 
-      var country = Object.keys(countries).map(function (a) {
-        return [a, countries[a].Mannen, countries[a].Vrouwen];
+      console.log(yearData)
+
+      var testData = Object.keys(data).map(function (a) {
+        return [a, data[a].jaar, data[a].periode, data[a].leeftijd, data[a].waarde]
       });
+      console.log(countries)
+
+      var country = Object.keys(countries).map(function (a) {
+        return [a, countries[a].Mannen, countries[a].Vrouwen, countries[a] = countries[a].Mannen + countries[a].Vrouwen]
+      });
+      console.log(country)
 
       var countryMen = [];
       country.forEach(function(name) {
@@ -197,7 +207,6 @@ function onload(err, doc) {
         x.domain(countryNames)
         y.domain([0, d3.max(countryMen)])
 
-        console.log(country)
         svg.selectAll(".bar").remove()
 
         g.selectAll(".bar")
@@ -215,7 +224,6 @@ function onload(err, doc) {
             })
             .attr("width", x.bandwidth())
             .attr("height", function(d) {
-              console.log(d)
               return height - y(d[1]);
             })
             svg.call(x).selectAll("text").remove();
@@ -223,15 +231,11 @@ function onload(err, doc) {
 
             g.append("g")
               .attr("class", "axis axis--x")
-              .transition()
-                .duration(0)
-                .ease(d3.easeLinear)
               .attr("transform", "translate(0," + height + ")")
               .call(d3.axisBottom(x));
 
           g.append("g")
             .attr("class", "axis axis--y")
-            .transition().duration(750)
             .call(d3.axisLeft(y).ticks(10))
               .append("text")
               .attr("transform", "rotate(-90)")
@@ -273,10 +277,11 @@ function onload(err, doc) {
 
   d3.select("input").on("change", change);
 
+
   function change() {
 
     // Copy-on-write since tweens are evaluated after a delay.
-     x = x.domain(yearData.sort(this.checked ? function(a, b) { return b[1] - a[1]; } : function(a, b) { return d3.ascending(a[0], b[0]); })
+     x = x.domain(country.sort(this.checked ? function(a, b) { return b[1] - a[1]; } : function(a, b) { return d3.ascending(a[0], b[0]); })
       .map(function(d) { return d[0]; }))
       .copy();
 

@@ -12,10 +12,6 @@ app.get('/', function (req, res) {
   res.render('index.html');
 });
 
-app.get('/test', function (req, res) {
-  res.render('test.html');
-});
-
 // assign a port to listen on
 app.listen(3000, function() {
 	console.log('Server started on port 3000...');
