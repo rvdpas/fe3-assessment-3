@@ -1,8 +1,16 @@
-.bar {
-  fill: #283593;
+body, html {
+  margin: 0;
+  padding: 0;
 }
 
-.bar:hover {
-  fill: #1A237E;
+div.tooltip {
+    position: absolute;
+    text-align: center;
+    padding: 8px;
+    color: #fff;
+    background: #626D71;
+    border: 0px;
+    border-radius: 6px;
+    pointer-events: none;
+    width: 400px;
 }
-

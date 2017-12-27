@@ -29,7 +29,6 @@ function onload(err, doc) {
 
   document.getElementById("btn").addEventListener("click", updateData);
 
-
 // working on select filter
   var elem = document.getElementById('select');
   elem.addEventListener("change", onSelectChange);
@@ -37,10 +36,7 @@ function onload(err, doc) {
   function onSelectChange(){
     var value = this.value;
 
-    console.log(value)
-    // var fdata = filteredData(value);
-    // d3.select('#Network_graph').selectAll("*").remove();
-    // makeGraph("#Network_graph", fdata);
+    console.log(value);
   }
 
   // set header of the file (this is text about the data, not the data itself)
@@ -129,9 +125,12 @@ function onload(err, doc) {
 
     agesGenders[d.leeftijd] = splitGender;
   });
+
   var yearData = Object.keys(year).map(function (a) {
     return [a, year[a]];
   });
+
+  console.log(data)
 
 // Bekijk voor elk de waarde van de array en push ze naar een aparte array om de y Max uit te rekenenn
   var valueList = []
