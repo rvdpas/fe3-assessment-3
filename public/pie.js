@@ -14,7 +14,6 @@
       .force('x', d3.forceX(width / 2).strength(0.5))
       .force('y', d3.forceY(height / 2).strength(0.5))
       .force('collide', d3.forceCollide(function(d) {
-        console.log(d)
         return radiusScale(d.aantal) + 1;
       }))
 
@@ -128,34 +127,13 @@
             aantal: 0,
             mannen: 0,
             vrouwen: 0,
-            nationaliteit: '',
+            nationaliteit: entry.nationaliteit
           };
         }
 
         dataByCountry[entry.nationaliteit].aantal += parseInt(entry.waarde);
         dataByCountry[entry.nationaliteit].mannen += entry.geslacht == 'Mannen' ? parseInt(entry.waarde) : 0;
         dataByCountry[entry.nationaliteit].vrouwen += entry.geslacht == 'Vrouwen' ? parseInt(entry.waarde) : 0;
-        dataByCountry.nationaliteit += entry.nationaliteit;
-
-        /*
-        dataByCountry = {
-          aantal: 0,
-          mannen: 0,
-          vrouwen: 0,
-          nationaliteit: '',
-        };
-
-      if(! entry.nationaliteit == dataByCountry.nationaliteit) {
-          dataByCountry.nationaliteit += entry.nationaliteit;
-        } else {
-          console.log('is niet gelijk')
-        }
-
-        dataByCountry.aantal += parseInt(entry.waarde);
-        dataByCountry.mannen += entry.geslacht == 'Mannen' ? parseInt(entry.waarde) : 0;
-        dataByCountry.vrouwen += entry.geslacht == 'Vrouwen' ? parseInt(entry.waarde) : 0;
-        console.log(dataByCountry)
-        */
       });
 
       return dataByCountry;
@@ -165,51 +143,42 @@
     var dataByCountry = getDataByCountry(data);
 
 
-    var test = [];
-    test.push(dataByCountry)
-
-    console.log(test)
-
-    console.log(dataByCountry)
+    var cleanedData = Object.values(dataByCountry)
+    console.log(cleanedData)
 
     // var yearData = Object.keys(year).map(function(a) {
     //   return [a, year[a]];
     // });
 
     radiusScale.domain([
-      d3.min(test, function(d) {
-      console.log(d);
+      d3.min(cleanedData, function(d) {
         return +d.aantal;
       }),
-      d3.max(test, function(d) {
-        console.log(d)
+      d3.max(cleanedData, function(d) {
         return +d.aantal;
       })
     ])
     .range([10, 80])
 
         var circles = svg.selectAll('.bubble')
-          .data(test)
+          .data(cleanedData)
           .enter()
             .append('circle')
             .attr('class', 'bubble')
             .attr('r', function(d) {
-              console.log(d)
               return radiusScale(d.aantal)
             })
             .style("fill", function(d) {
-              console.log(d)
               return colorCircles(d.category)
             })
             .text(function(d) {
-              console.log(d)
               return d.aantal;
             })
             .on("mouseover", function(d) {
               tooltip.transition()
                 .duration(200)
                 .style("opacity", .9);
-              tooltip.html(`${d[0]} <br> ${d[1]}`)
+              tooltip.html(`${d.nationaliteit} <br> ${d.aantal}`)
                 .style("top", (d3.event.pageY-10)+"px")
                 .style("left",(d3.event.pageX+10)+"px");
             })
@@ -224,7 +193,7 @@
         .attr("class", "tooltip")
         .style("opacity", 0);
 
-        simulation.nodes(test)
+        simulation.nodes(cleanedData)
           .on('tick', ticked)
 
         function ticked() {
