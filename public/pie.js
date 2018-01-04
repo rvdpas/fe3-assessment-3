@@ -135,33 +135,43 @@
         dataByCountry[entry.nationaliteit].mannen += entry.geslacht == 'Mannen' ? parseInt(entry.waarde) : 0;
         dataByCountry[entry.nationaliteit].vrouwen += entry.geslacht == 'Vrouwen' ? parseInt(entry.waarde) : 0;
       });
-
+       dataByCountry = Object.values(dataByCountry)
+       console.log(dataByCountry)
       return dataByCountry;
     }
 
     // var dataByCountry = getDataByCountry(data, 2013);
-    var dataByCountry = getDataByCountry(data);
+    var dataByCountry = getDataByCountry(data, yearFilter())
+    console.log(dataByCountry)
 
 
-    var cleanedData = Object.values(dataByCountry)
-    console.log(cleanedData)
+    var button = document.querySelector('#test');
+    function yearFilter(getDataByCountry) {
+      button.addEventListener('click', function(e) {
+      button.textContent.trim();
+      })
+    };
+
+
+    console.log(dataByCountry)
+
 
     // var yearData = Object.keys(year).map(function(a) {
     //   return [a, year[a]];
     // });
 
     radiusScale.domain([
-      d3.min(cleanedData, function(d) {
+      d3.min(dataByCountry, function(d) {
         return +d.aantal;
       }),
-      d3.max(cleanedData, function(d) {
+      d3.max(dataByCountry, function(d) {
         return +d.aantal;
       })
     ])
     .range([10, 80])
 
         var circles = svg.selectAll('.bubble')
-          .data(cleanedData)
+          .data(dataByCountry)
           .enter()
             .append('circle')
             .attr('class', 'bubble')
@@ -193,7 +203,7 @@
         .attr("class", "tooltip")
         .style("opacity", 0);
 
-        simulation.nodes(cleanedData)
+        simulation.nodes(dataByCountry)
           .on('tick', ticked)
 
         function ticked() {
