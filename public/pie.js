@@ -146,9 +146,10 @@
 
 
     var button = document.querySelector('#test');
-    function yearFilter(getDataByCountry) {
+    function yearFilter() {
       button.addEventListener('click', function(e) {
       button.textContent.trim();
+        // return button.textContent.trim();
       })
     };
 
