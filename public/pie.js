@@ -135,26 +135,30 @@
         dataByCountry[entry.nationaliteit].mannen += entry.geslacht == 'Mannen' ? parseInt(entry.waarde) : 0;
         dataByCountry[entry.nationaliteit].vrouwen += entry.geslacht == 'Vrouwen' ? parseInt(entry.waarde) : 0;
       });
-       dataByCountry = Object.values(dataByCountry)
-       console.log(dataByCountry)
+      dataByCountry = Object.values(dataByCountry)
+      console.log(dataByCountry)
       return dataByCountry;
     }
 
     // var dataByCountry = getDataByCountry(data, 2013);
+<<<<<<< HEAD
     var dataByCountry = getDataByCountry(data, yearFilter)
     console.log(dataByCountry)
+=======
+>>>>>>> 5f8e787a71ba7da6056340f9fe7647b98a556a7f
 
 
-    var button = document.querySelector('#test');
-    function yearFilter(getDataByCountry) {
-      button.addEventListener('click', function(e) {
-      button.textContent.trim();
-      })
-    };
+    var selectOptions = document.getElementById('select');
+    console.log(selectOptions)
 
+    function yearFilter () {
+      return this.value;
+    }
 
+    selectOptions.addEventListener('change', yearFilter);
+
+    var dataByCountry = getDataByCountry(data, yearFilter())
     console.log(dataByCountry)
-
 
     // var yearData = Object.keys(year).map(function(a) {
     //   return [a, year[a]];
@@ -197,6 +201,13 @@
                 .duration(500)
                 .style("opacity", 0);
             })
+
+            // var updateCircles = svg.selectAll('.bubble')
+            //   .on("change", yearFilter)
+            //   .data(getDataByCountry(data, yearFilter))
+            //     updateCircles.exit().remove();//remove unneeded circles
+            //     updateCircles.enter().append("circle")
+
 
       // Define the tooltip for the tooltip
       var tooltip = d3.select("body").append("div")
