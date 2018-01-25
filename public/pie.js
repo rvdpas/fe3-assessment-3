@@ -141,7 +141,7 @@
     }
 
     // var dataByCountry = getDataByCountry(data, 2013);
-    var dataByCountry = getDataByCountry(data, yearFilter())
+    var dataByCountry = getDataByCountry(data, yearFilter)
     console.log(dataByCountry)
 
 
