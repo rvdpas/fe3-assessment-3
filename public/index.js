@@ -9,6 +9,12 @@
   var svg = d3.select("#chart");
   var width = 1000;
   var height = 1000;
+  var margin = {
+    left: 20,
+    top: 20,
+    right: 20,
+    bottom: 20,
+  }
 
   var x = d3.scaleBand().rangeRound([0, width]).padding(0.1);
   var y = d3.scaleLinear().rangeRound([height, 0]);
@@ -26,11 +32,11 @@ function onload(err, doc) {
     throw err
   }
 
-  document.getElementById("btn").addEventListener("click", updateData);
+  // document.getElementById("btn").addEventListener("click", updateData);
 
 // working on select filter
   var elem = document.getElementById('select');
-  elem.addEventListener("change", onSelectChange);
+  // elem.addEventListener("change", onSelectChange);
 
   function onSelectChange(){
     var value = this.value;
@@ -132,170 +138,170 @@ function onload(err, doc) {
   console.log(data)
 
 // Bekijk voor elk de waarde van de array en push ze naar een aparte array om de y Max uit te rekenenn
-//   var valueList = []
-//   yearData.forEach(function (values) {
-//     valueList.push(values[1]);
-//   });
+  var valueList = []
+  yearData.forEach(function (values) {
+    valueList.push(values[1]);
+  });
 
-//   x.domain(Object.keys(year))
-//   y.domain([0, d3.max(valueList)])
+  x.domain(Object.keys(year))
+  y.domain([0, d3.max(valueList)])
 
-//   g.append("g")
-//     .attr("class", "axis axis--x")
-//     .attr("transform", "translate(0," + height + ")")
-//     .call(d3.axisBottom(x));
+  g.append("g")
+    .attr("class", "axis axis--x")
+    .attr("transform", "translate(0," + height + ")")
+    .call(d3.axisBottom(x));
 
-//   g.append("g")
-//     .attr("class", "axis axis--y")
-//     .call(d3.axisLeft(y).ticks(10))
-//   .append("text")
-//     .attr("transform", "rotate(-90)")
-//     .attr("y", 0 - margin.left)
-//     .attr("x", 0 - (height / 2))
-//     .attr("dy", "1em")
-//     .attr("text-anchor", "middle")
-//     .text("Frequency");
+  g.append("g")
+    .attr("class", "axis axis--y")
+    .call(d3.axisLeft(y).ticks(10))
+  .append("text")
+    .attr("transform", "rotate(-90)")
+    .attr("y", 0 - margin.left)
+    .attr("x", 0 - (height / 2))
+    .attr("dy", "1em")
+    .attr("text-anchor", "middle")
+    .text("Frequency");
 
-//   g.selectAll(".bar")
-//     .data(yearData)
-//     .enter().append("rect")
-//     .transition()
-//       .duration(300)
-//       .ease(d3.easeLinear)
-//       .attr("class", "bar")
-//       .attr("x", function(d) {
-//         return x(d[0]);
-//       })
-//       .attr("y", function(d) {
-//         return y(d[1]);
-//       })
-//       .attr("width", x.bandwidth())
-//       .attr("height", function(d) {
-//         return height - y(d[1]);
-//       })
+  g.selectAll(".bar")
+    .data(yearData)
+    .enter().append("rect")
+    .transition()
+      .duration(300)
+      .ease(d3.easeLinear)
+      .attr("class", "bar")
+      .attr("x", function(d) {
+        return x(d[0]);
+      })
+      .attr("y", function(d) {
+        return y(d[1]);
+      })
+      .attr("width", x.bandwidth())
+      .attr("height", function(d) {
+        return height - y(d[1]);
+      })
 
-//       var country = Object.keys(countries).map(function (a) {
-//         return [a, countries[a].Mannen, countries[a].Vrouwen];
-//       });
+      var country = Object.keys(countries).map(function (a) {
+        return [a, countries[a].Mannen, countries[a].Vrouwen];
+      });
 
-//       var countryMen = [];
-//       country.forEach(function(name) {
-//         countryMen.push(name[1]);
-//       });
+      var countryMen = [];
+      country.forEach(function(name) {
+        countryMen.push(name[1]);
+      });
 
-//       var countryNames = [];
-//       country.forEach(function(name) {
-//         countryNames.push(name[0]);
-//       });
+      var countryNames = [];
+      country.forEach(function(name) {
+        countryNames.push(name[0]);
+      });
 
-//       function updateData() {
-//         x = d3.scaleBand().range([0, width]).padding(0.1);
-//         y = d3.scaleLinear().rangeRound([height, 0]);
+      function updateData() {
+        x = d3.scaleBand().range([0, width]).padding(0.1);
+        y = d3.scaleLinear().rangeRound([height, 0]);
 
-//         x.domain(countryNames)
-//         y.domain([0, d3.max(countryMen)])
+        x.domain(countryNames)
+        y.domain([0, d3.max(countryMen)])
 
-//         console.log(country)
-//         svg.selectAll(".bar").remove()
+        console.log(country)
+        svg.selectAll(".bar").remove()
 
-//         g.selectAll(".bar")
-//           .data(country)
-//           .enter().append("rect")
-//             .transition()
-//               .duration(750)
-//               .ease(d3.easeLinear)
-//             .attr("class", "bar new")
-//             .attr("x", function(d) {
-//               return x(d[0]);
-//             })
-//             .attr("y", function(d) {
-//               return y(d[1]);
-//             })
-//             .attr("width", x.bandwidth())
-//             .attr("height", function(d) {
-//               console.log(d)
-//               return height - y(d[1]);
-//             })
-//             svg.call(x).selectAll("text").remove();
-//             svg.call(x).selectAll("g.tick").remove();
+        g.selectAll(".bar")
+          .data(country)
+          .enter().append("rect")
+            .transition()
+              .duration(750)
+              .ease(d3.easeLinear)
+            .attr("class", "bar new")
+            .attr("x", function(d) {
+              return x(d[0]);
+            })
+            .attr("y", function(d) {
+              return y(d[1]);
+            })
+            .attr("width", x.bandwidth())
+            .attr("height", function(d) {
+              console.log(d)
+              return height - y(d[1]);
+            })
+            svg.call(x).selectAll("text").remove();
+            svg.call(x).selectAll("g.tick").remove();
 
-//             g.append("g")
-//               .attr("class", "axis axis--x")
-//               .transition()
-//                 .duration(0)
-//                 .ease(d3.easeLinear)
-//               .attr("transform", "translate(0," + height + ")")
-//               .call(d3.axisBottom(x));
+            g.append("g")
+              .attr("class", "axis axis--x")
+              .transition()
+                .duration(0)
+                .ease(d3.easeLinear)
+              .attr("transform", "translate(0," + height + ")")
+              .call(d3.axisBottom(x));
 
-//           g.append("g")
-//             .attr("class", "axis axis--y")
-//             .transition().duration(750)
-//             .call(d3.axisLeft(y).ticks(10))
-//               .append("text")
-//               .attr("transform", "rotate(-90)")
-//               .attr("y", 0 - margin.left)
-//               .attr("x", 0 - (height / 2))
-//               .attr("dy", "1em")
-//               .attr("text-anchor", "middle")
-//               .text("Frequency");
+          g.append("g")
+            .attr("class", "axis axis--y")
+            .transition().duration(750)
+            .call(d3.axisLeft(y).ticks(10))
+              .append("text")
+              .attr("transform", "rotate(-90)")
+              .attr("y", 0 - margin.left)
+              .attr("x", 0 - (height / 2))
+              .attr("dy", "1em")
+              .attr("text-anchor", "middle")
+              .text("Frequency");
 
-//         function change() {
-//           clearTimeout(sortTimeout);
+        function change() {
+          clearTimeout(sortTimeout);
 
-//           // Copy-on-write since tweens are evaluated after a delay.
-//            x = x.domain(country.sort(this.checked ? function(a, b) { return b[1] - a[1]; } : function(a, b) { return d3.ascending(a[0], b[0]); })
-//             .map(function(d) { return d[0]; }))
-//             .copy();
+          // Copy-on-write since tweens are evaluated after a delay.
+           x = x.domain(country.sort(this.checked ? function(a, b) { return b[1] - a[1]; } : function(a, b) { return d3.ascending(a[0], b[0]); })
+            .map(function(d) { return d[0]; }))
+            .copy();
 
-//           svg.selectAll(".bar").sort(function(a, b) {
-//             return x(a[1]) - x(b[0]);
-//           });
+          svg.selectAll(".bar").sort(function(a, b) {
+            return x(a[1]) - x(b[0]);
+          });
 
-//           var transition = svg.transition().duration(750),
-//             delay = function(d, i) {
-//               return i * 50;
-//             };
+          var transition = svg.transition().duration(750),
+            delay = function(d, i) {
+              return i * 50;
+            };
 
-//           transition.selectAll(".bar")
-//               .delay(delay)
-//               .attr("x", function(d) {
-//                 return x(d[0]);
-//               });
+          transition.selectAll(".bar")
+              .delay(delay)
+              .attr("x", function(d) {
+                return x(d[0]);
+              });
 
-//           transition.select("axis axis--x")
-//             .call(x)
-//           .selectAll("g")
-//             .delay(delay);
-//         }
-//       }
+          transition.select("axis axis--x")
+            .call(x)
+          .selectAll("g")
+            .delay(delay);
+        }
+      }
 
-//   d3.select("input").on("change", change);
+  d3.select("input").on("change", change);
 
-//   function change() {
+  function change() {
 
-//     // Copy-on-write since tweens are evaluated after a delay.
-//      x = x.domain(yearData.sort(this.checked ? function(a, b) { return b[1] - a[1]; } : function(a, b) { return d3.ascending(a[0], b[0]); })
-//       .map(function(d) { return d[0]; }))
-//       .copy();
+    // Copy-on-write since tweens are evaluated after a delay.
+     x = x.domain(yearData.sort(this.checked ? function(a, b) { return b[1] - a[1]; } : function(a, b) { return d3.ascending(a[0], b[0]); })
+      .map(function(d) { return d[0]; }))
+      .copy();
 
-//     svg.selectAll(".bar").sort(function(a, b) {
-//       return x(a[1]) - x(b[0]);
-//     });
+    svg.selectAll(".bar").sort(function(a, b) {
+      return x(a[1]) - x(b[0]);
+    });
 
-//     var transition = svg.transition().duration(750),
-//       delay = function(d, i) {
-//         return i * 50;
-//       };
+    var transition = svg.transition().duration(750),
+      delay = function(d, i) {
+        return i * 50;
+      };
 
-//     transition.selectAll(".bar")
-//         .delay(delay)
-//         .attr("x", function(d) {
-//           return x(d[0]);
-//         });
+    transition.selectAll(".bar")
+        .delay(delay)
+        .attr("x", function(d) {
+          return x(d[0]);
+        });
 
-//     transition.select("axis axis--x")
-//       .call(x)
-//     .selectAll("g")
-//       .delay(delay);
-//   }
-// }
+    transition.select("axis axis--x")
+      .call(x)
+    .selectAll("g")
+      .delay(delay);
+  }
+}
