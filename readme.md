@@ -164,6 +164,10 @@ function reset() {
 - [object keys](https://developer.mozilla.org/nl/docs/Web/JavaScript/Reference/Global_Objects/Object/sorted_keys)
 - [path bounds](https://stackoverflow.com/questions/25310390/how-does-path-bounds-work)
 
+## TODO
+- [ ] Show full country names
+- [ ] Update data in country-info block after range change
+
 ## Extra
 Here I will show how i prepared the old data to make something useful of it: 
 
