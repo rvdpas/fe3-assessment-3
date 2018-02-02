@@ -10,10 +10,10 @@ const worldMap = d3.select("body").insert("svg")
   .attr("height", height)
   .attr("width", width)
 
-// type of map used
+// type of map used (full list: https://github.com/d3/d3-geo-projection)
 const path = d3.geoPath(d3.geoRobinson());
 
-// slider
+// create slider
 d3.select("body").append("input")
   .attr("type", "range")
   .attr("min", "2013")
@@ -24,13 +24,6 @@ d3.select("body").append("input")
 // Create title above map
 d3.select("body").insert("h2", ":first-child")
   .text(`${headline}${firstYear}`);
-
-// init legend container
-worldMap.append("g")
-  .attr("class", "legend");
-worldMap.append("g")
-  .attr("class", "legend__title")
-  .append("text");
 
 // define margins
 const margin = {
@@ -80,7 +73,7 @@ d3.json("data.json", (error, d) => {
         
     worldMap
       .call(zoom) 
-      .on("click", reset);
+      .on("click", resetZoom);
         
     const g = worldMap.append("g")
       .attr("class", "countries")
@@ -145,7 +138,7 @@ d3.json("data.json", (error, d) => {
     }
 
     // zoom out 
-    function reset() {
+    function resetZoom() {
       worldMap.transition()
         .duration(750)
         .call( zoom.transform, d3.zoomIdentity ); 
@@ -191,8 +184,14 @@ function updateMap(color, data) {
 
 // render the legend
 function renderLegend(color, data) {
+  worldMap.append("g")
+    .attr("class", "legend");
+  worldMap.append("g")
+    .attr("class", "legend__title")
+    .append("text");
+    
   let mapHeight = +d3.select("svg#map").attr("height");
-  let legendItems = pairQuantiles(color.domain());
+  let legendItems = pairQuantiles(color.domain()); // match color with legend items
 
   let legend = d3.select("svg#map g.legend").selectAll("rect")
     .data(color.range());
