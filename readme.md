@@ -167,6 +167,7 @@ function reset() {
 ## TODO
 - [ ] Show full country names
 - [ ] Update data in country-info block after range change
+- [ ] ability to sort the bars
 
 ## Extra
 Here I will show how i prepared the old data to make something useful of it: 
